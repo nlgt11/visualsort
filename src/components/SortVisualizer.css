@@ -1,0 +1,42 @@
+.container {
+    margin: auto;
+    max-width: 80vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.columns {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 80vh;
+    margin-bottom: 30px;
+}
+.column {
+    background-color: pink;
+    width: 30px;
+    height: 50px;
+    padding-bottom: 5px;
+    color: black;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 0px 2px 0px 2px
+}
+.controller {
+    display: flex;
+    align-items: space-around;
+}
+
+.controller button {
+    margin: 10px;
+}
+
+.done {
+    background-color: green;
+}
+
+.iterating {
+    background-color: yellow;
+}
