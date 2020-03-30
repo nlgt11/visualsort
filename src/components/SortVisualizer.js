@@ -6,7 +6,7 @@ function sleep(ms) {
 }
 
 const SPEED = 70;
-const SIZE = 25;
+const SIZE = 30;
 const COLOR_PRIMARY = "pink";
 const COLOR_SWAPPING = "green";
 const COLOR_ITERATING = "yellow";
@@ -41,7 +41,8 @@ const SortVisualizer = () => {
         for (let i = 0; i < myArr.length; i++) {
             cols[myArr[i]].style.backgroundColor = COLOR_ITERATING;
         }
-        await sleep(SPEED * 2);
+        await sleep(SPEED * 1.5); // reduce aniiterating of quick sort
+        //removeAnimation(myArr);
     }
     const aniWaiting = myArr => {
         for (let i = 0; i < myArr.length; i++) {
@@ -55,14 +56,14 @@ const SortVisualizer = () => {
     }
 
     //========== Algorithms ==============
-    // Bubble sort
+    //========== Bubble sort =============
     const bubbleSort = async() => {
         let tempArr = [...arr];
         for (let i = 0; i < SIZE - 1; i++) {
             let swapped = false;
             for (let j = 0; j < SIZE-i-1; j++) {
                 await aniIterating([j, j+1]); // Change color of iterating element
-                if (tempArr[j] > tempArr[i + 1]) {
+                if (tempArr[j] > tempArr[j + 1]) {
                     let a = tempArr[j];
                     tempArr[j] = tempArr[j + 1];
                     tempArr[j+1] = a;
@@ -76,7 +77,7 @@ const SortVisualizer = () => {
         setArr(tempArr);
     }
 
-    // Selection sort
+    //======== Selection sort ==============
     const selectionSort = async() => {
         let tempArr = [...arr];
         for (let i = 0; i < SIZE - 1; i++) {
@@ -105,11 +106,64 @@ const SortVisualizer = () => {
         setArr(tempArr);
     }
 
+
+    //======= Quick sort ==================
+    const partition = async(myArr, low, high) => {
+        let pivot = myArr[low];
+        let i = low - 1;
+        let j = high + 1;
+        while (true) {
+            do {
+                i++;
+                if (j === high + 1) {
+                    await aniIterating([i, j-1]);
+                    removeAnimation([i, j-1]);
+                } else {
+                    await aniIterating([i, j]);
+                    removeAnimation([i, j]);
+                }
+            } while (myArr[i] < pivot);
+            do {
+                j--;
+                if (i === low - 1) {
+                    await aniIterating([i + 1, j]);
+                    removeAnimation([i + 1, j]);
+                } else {
+                    await aniIterating([i, j]);
+                    removeAnimation([i, j]);
+                }
+            } while (myArr[j] > pivot);
+            if (i >= j) {
+                return j;
+            }
+            let temp = myArr[i];
+            myArr[i] = myArr[j];
+            myArr[j] = temp;
+            await aniSwap(i, j);
+            removeAnimation([i, j]);
+        }
+        
+    }
+    const quickSort = async (myArr, low, high) => {
+        if (low < high) {
+            let pIdx = await partition(myArr, low, high);
+            await quickSort(myArr, low, pIdx);
+            await quickSort(myArr, pIdx + 1, high);
+        }
+    }
+
+    const callQuickSort = () => {
+        let tempArr = [...arr];
+        quickSort(tempArr, 0, tempArr.length - 1);
+        //setTimeout(() => setArr(tempArr), 1000);
+    }
+
+
         
     return (
         <div className="container">
             <div className="columns">
-                {arr.map((el, idx) => {
+                {(arr).map((el, idx) => {
                         return (
                             <div className="column" style={{height: `${el*10}px`}} >{el}</div>
                         )
@@ -120,6 +174,7 @@ const SortVisualizer = () => {
                 <button onClick={() => resetArr()} >Generate Array</button>
                 <button onClick={() => bubbleSort()}>Bubble Sort</button>
                 <button onClick={() => selectionSort()}>Selection Sort</button>
+                <button onClick={() => callQuickSort()}>Quick Sort</button>
             </div>
         </div>
     )
