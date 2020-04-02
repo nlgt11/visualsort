@@ -86,11 +86,24 @@
     font-size: x-large;
     font-weight: bold;
 }
-
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    height: 40px;
+    color: white;
+    background-color: #DAD735;
+}
+.footer a {
+    text-decoration: none;
+    color: #966909;
+    font-size: large;
+}
 
 .slider {
     outline: none;
-    cursor: pointer;
     color: #966909;
     font-family: inherit;
     font-size: 1.2em;
@@ -101,10 +114,18 @@
 .slider label {
     margin-bottom: 10px;
 }
+.slider:disabled {
+    cursor: not-allowed;
+    background: #C7C6C6;
+}
 
+input:disabled {
+    cursor: not-allowed;
+}
 
 input[type="range"] {
     -webkit-appearance: none;
+    background: #DAD735;
 }
 
 input[type="range"]:focus {

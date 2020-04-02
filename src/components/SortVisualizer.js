@@ -1,8 +1,8 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import './SortVisualizer.css';
 import Controller from './Controller/Controller';
-import Title from './Title/Title'
-
+import Title from './Title/Title';
+import Footer from './Title/Footer';
 
 
 function sleep(ms) {
@@ -24,6 +24,7 @@ const SortVisualizer = () => {
         }
         setArr(newArr);
     }
+
     const [SPEED, setSpeed] = useState(50);
     const speedChangeHandler = e => {
         let newSpeed = Math.floor(e.target.value);
@@ -36,8 +37,6 @@ const SortVisualizer = () => {
         let newSize = Math.floor(e.target.value);
         setSize(newSize);
     }
-
-
 
     useEffect(() => resetArr(), [SIZE]);
 
@@ -80,9 +79,21 @@ const SortVisualizer = () => {
         }
     }
 
+    const toggleSorting = () => {
+        const buttons = document.getElementsByClassName("btn");
+        const sliders = document.getElementsByTagName("input");
+        for (const el of buttons) {
+            el.disabled = !el.disabled;
+        }
+        for (const el of sliders) {
+            el.disabled = !el.disabled;
+        }
+    }
+
     //========== Algorithms ==============
     //========== Bubble sort =============
     const bubbleSort = async() => {
+        toggleSorting();
         let tempArr = [...arr];
         for (let i = 0; i < SIZE - 1; i++) {
             let swapped = false;
@@ -99,11 +110,14 @@ const SortVisualizer = () => {
             }
             if (!swapped) break;
         }
+        //buttons.disabled = false;
+        toggleSorting();
         setArr(tempArr);
     }
 
     //======== Selection sort ==============
     const selectionSort = async() => {
+        toggleSorting();
         let tempArr = [...arr];
         for (let i = 0; i < SIZE - 1; i++) {
             let minIdx = i + 1;
@@ -128,6 +142,7 @@ const SortVisualizer = () => {
             removeAnimation([i]);
             removeAnimation([i + 1]);
         }
+        toggleSorting();
         setArr(tempArr);
     }
 
@@ -149,7 +164,9 @@ const SortVisualizer = () => {
                 await aniSwap(i, j);
                 aniWaiting([i + 1]);
             }
-            removeAnimation([j]);
+            if (j != i + 1) {
+                removeAnimation([j]);
+            }
         }
         let temp = myArr[i + 1];
         myArr[i + 1] = myArr[high];
@@ -169,12 +186,15 @@ const SortVisualizer = () => {
     }
 
     const callQuickSort = async () => {
+        toggleSorting();
         let tempArr = [...arr];
         await quickSort(tempArr, 0, tempArr.length - 1);
+        toggleSorting();
         setArr(tempArr);
     }
 
 
+    //==================================================
         
     return (
         <Fragment>
@@ -199,6 +219,7 @@ const SortVisualizer = () => {
                     size={SIZE}
                     changeSize={sizeChangeHandler}
                 />
+                <Footer />
             </div>
         </Fragment>
     )
