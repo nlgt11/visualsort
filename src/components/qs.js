@@ -26,7 +26,7 @@ const quickSort = (myArr, low, high) => {
     }
 
 }
-
+const a = [51, 45, 39, 23, 39, 52, 4, 50, 46, 1, 15, 24, 17, 17, 35, 21, 19, 19, 26, 20, 50, 23, 30, 46, 27, 21, 44, 54, 23, 18, 53, 41, 42, 28, 51, 8, 2, 12, 21, 38];
 const newArr = [];
 for (let i = 0; i < 20; i++) {
     newArr.push(Math.floor(Math.random() * 55) + 1) // 1 -> 55

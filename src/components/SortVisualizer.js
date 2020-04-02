@@ -5,16 +5,20 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const SPEED = 70;
-const SIZE = 30;
+const SPEED = 0;
+const SIZE = 40;
 const COLOR_PRIMARY = "pink";
 const COLOR_SWAPPING = "green";
 const COLOR_ITERATING = "yellow";
 const COLOR_WAITING = "orange";
 
 const SortVisualizer = () => {
-    const [arr, setArr] = useState([]);
 
+
+    const [arr, setArr] = useState([]);
+    useEffect(() => {
+        console.log(arr);
+    }, arr)
     const resetArr = () => {
         const newArr = [];
         for (let i = 0; i < SIZE; i++) {
@@ -36,6 +40,7 @@ const SortVisualizer = () => {
         cols[a].innerHTML = cols[b].innerHTML;
         cols[b].innerHTML = tempInner;
         await sleep(SPEED * 4);
+        removeAnimation([a,b]);
     }
     const aniIterating = async myArr => {
         for (let i = 0; i < myArr.length; i++) {
@@ -144,18 +149,53 @@ const SortVisualizer = () => {
         }
         
     }
+
+    const partition2 = async (myArr, low, high) => {
+        let pivot = myArr[high];
+        aniWaiting([high]);
+        let i = low - 1;
+        for (let j = low; j <= high - 1; j++) {
+            if (i >= low) {
+                await aniIterating([i, j]);
+            } else {
+                await aniIterating([j]);
+            }
+            if (myArr[j] < pivot) {
+                if (i >= low) {
+                    removeAnimation([i]);
+                }
+                i++;
+                let temp = myArr[i];
+                myArr[i] = myArr[j];
+                myArr[j] = temp;
+                await aniSwap(i, j);
+            }
+            if (i >= low) {
+                removeAnimation([i, j]);
+            } else {
+                removeAnimation([j]);
+            }
+        }
+        let temp = myArr[i + 1];
+        myArr[i + 1] = myArr[high];
+        myArr[high] = temp;
+        await aniSwap(i + 1, high);
+        return (i+1);
+    }
+
+
     const quickSort = async (myArr, low, high) => {
         if (low < high) {
-            let pIdx = await partition(myArr, low, high);
-            await quickSort(myArr, low, pIdx);
+            let pIdx = await partition2(myArr, low, high);
+            await quickSort(myArr, low, pIdx - 1);
             await quickSort(myArr, pIdx + 1, high);
         }
     }
 
-    const callQuickSort = () => {
+    const callQuickSort = async () => {
         let tempArr = [...arr];
-        quickSort(tempArr, 0, tempArr.length - 1);
-        //setTimeout(() => setArr(tempArr), 1000);
+        await quickSort(tempArr, 0, tempArr.length - 1);
+        setArr(tempArr);
     }
 
 
