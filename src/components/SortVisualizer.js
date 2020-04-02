@@ -155,6 +155,7 @@ const SortVisualizer = () => {
         aniWaiting([i + 1]);
         for (let j = low; j <= high - 1; j++) {
             await aniIterating([j]);
+            aniWaiting([i + 1]);
             if (myArr[j] < pivot) {
                 removeAnimation([i + 1]);
                 i++;
